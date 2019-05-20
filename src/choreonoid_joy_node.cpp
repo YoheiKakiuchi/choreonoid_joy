@@ -8,8 +8,16 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "choreonoid_joy");
 
-    cnoid::Joystick joystick;
+    ros::NodeHandle node("~");
+
+    std::string device = "/dev/input/js0";
+    if (node.hasParam("device")) {
+      bool ret = node.getParam("device", device);
+    }
+
+    cnoid::Joystick joystick(device.c_str());
     if(!joystick.isReady()){
+        ROS_ERROR("joystic device not ready!!");
         cerr << joystick.errorMessage() << endl;
         return 1;
     }
@@ -20,7 +28,7 @@ int main(int argc, char **argv)
     joystick.sigButton().connect([&](int, bool){ stateChanged = true; });
     joystick.sigAxis().connect([&](int, double){ stateChanged = true; });
         
-    ros::NodeHandle node;
+
     ros::Publisher publisher = node.advertise<sensor_msgs::Joy>("joy", 30);
 
     ros::Rate loop_rate(60);

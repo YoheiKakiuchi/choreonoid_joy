@@ -1,0 +1,9 @@
+<launch>
+  <arg name="device" default="/dev/input/js0" />
+  <arg name="namespace" default="AizuSpider" />
+  <node pkg="choreonoid_joy" name="joy_node" type="node" ns="$(arg namespace)">
+    <param name="device" value="$(arg device)" />
+    <remap from="~joy" to="joy" />
+  </node>
+  <!-- rosrun choreonoid_joy node _device:=/dev/input/js0 ~joy:=/AizuSpider/joy -->
+</launch>
